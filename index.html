@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#176b63">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Extensive Quiz">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Extensive Games Quiz</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Game Theory 102477</p>
+          <h1>Extensive Games Quiz</h1>
+        </div>
+        <div class="tree-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </header>
+
+      <main>
+        <section class="control-panel" aria-labelledby="setup-title">
+          <div class="setup-copy">
+            <h2 id="setup-title">Practice setup</h2>
+            <p>Questions follow slides 1-51 and Problem Set 3 except Problem 14. Mixed extensions and dominated-strategy elimination are excluded.</p>
+          </div>
+
+          <div class="controls">
+            <label>
+              Topic
+              <select id="topic-filter">
+                <option value="all">All topics</option>
+              </select>
+            </label>
+            <label>
+              Difficulty
+              <select id="difficulty-filter">
+                <option value="all">All levels</option>
+                <option value="warmup">Warmup</option>
+                <option value="core">Core</option>
+                <option value="exam">Exam style</option>
+              </select>
+            </label>
+            <label>
+              Session
+              <select id="session-size">
+                <option value="15">15 questions</option>
+                <option value="30" selected>30 questions</option>
+                <option value="50">50 questions</option>
+                <option value="all">All filtered questions</option>
+              </select>
+            </label>
+            <button id="start-btn" type="button">Start quiz</button>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Quiz statistics">
+          <div>
+            <span id="bank-count">0</span>
+            <p>questions in bank</p>
+          </div>
+          <div>
+            <span id="score">0/0</span>
+            <p>score</p>
+          </div>
+          <div>
+            <span id="progress">0%</span>
+            <p>completed</p>
+          </div>
+        </section>
+
+        <section class="quiz-panel" aria-live="polite">
+          <div class="question-meta">
+            <span id="question-counter">Question 0 of 0</span>
+            <span id="question-source">Ready</span>
+          </div>
+          <h2 id="question-text">Choose your setup and start a quiz.</h2>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback" hidden></div>
+          <div class="quiz-actions">
+            <button id="next-btn" type="button" disabled>Next</button>
+            <button id="restart-btn" type="button">Restart</button>
+          </div>
+        </section>
+
+        <section class="review-panel" aria-labelledby="review-title">
+          <h2 id="review-title">Session review</h2>
+          <div id="review-list" class="review-list">
+            <p class="empty">Answered questions will appear here.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
