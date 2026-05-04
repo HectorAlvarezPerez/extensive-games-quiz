@@ -1,6 +1,53 @@
 (function () {
   const letters = ["A", "B", "C", "D", "E"];
   const bank = Array.isArray(window.QUESTION_BANK) ? window.QUESTION_BANK : [];
+  const figures = {
+    "ps31-001": ["assets/figures/ps31-figure-1.png", "Problem 3.1 Figure 1 game tree"],
+    "ps31-002": ["assets/figures/ps31-figure-1.png", "Problem 3.1 Figure 1 game tree"],
+    "ps31-003": ["assets/figures/ps31-figure-1.png", "Problem 3.1 Figure 1 game tree"],
+    "ps31-004": ["assets/figures/ps31-figure-2.png", "Problem 3.1 Figure 2 game tree"],
+    "ps31-005": ["assets/figures/ps31-figure-2.png", "Problem 3.1 Figure 2 game tree"],
+    "ps31-006": ["assets/figures/ps31-figure-3.png", "Problem 3.1 Figure 3 game tree"],
+    "ps31-007": ["assets/figures/ps31-figure-3.png", "Problem 3.1 Figure 3 game tree"],
+    "ps31-008": ["assets/figures/ps31-figure-3.png", "Problem 3.1 Figure 3 game tree"],
+    "ps31-009": ["assets/figures/ps31-figure-3.png", "Problem 3.1 Figure 3 game tree"],
+    "ps31-010": ["assets/figures/ps31-figure-4.png", "Problem 3.1 Figure 4 game tree"],
+    "ps31-011": ["assets/figures/ps31-figure-4.png", "Problem 3.1 Figure 4 game tree"],
+    "ps31-012": ["assets/figures/ps31-figure-4.png", "Problem 3.1 Figure 4 game tree"],
+    "ps32-001": ["assets/figures/ps32-game-1.png", "Problem 3.2 Game 1 tree"],
+    "ps32-002": ["assets/figures/ps32-game-1.png", "Problem 3.2 Game 1 tree"],
+    "ps32-003": ["assets/figures/ps32-game-2.png", "Problem 3.2 Game 2 tree"],
+    "ps32-004": ["assets/figures/ps32-game-3.png", "Problem 3.2 Game 3 tree"],
+    "ps32-005": ["assets/figures/ps32-game-4b.png", "Problem 3.2 Game 4 equivalent tree"],
+    "ps34-001": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
+    "ps34-002": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
+    "ps34-003": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
+    "ps35-001": ["assets/figures/ps35-figure-6.png", "Problem 3.5 Figure 6 entrant-monopolist tree"],
+    "ps35-002": ["assets/figures/ps35-figure-6.png", "Problem 3.5 Figure 6 entrant-monopolist tree"],
+    "ps35-003": ["assets/figures/ps35-figure-6-2.png", "Problem 3.5 Figure 6.2 investment tree"],
+    "ps36-001": ["assets/figures/ps36-figure-7.png", "Problem 3.6 Figure 7 game tree"],
+    "ps36-002": ["assets/figures/ps36-figure-7.png", "Problem 3.6 Figure 7 game tree"],
+    "ps37-001": ["assets/figures/ps37-figures-10-v1-v2.png", "Problem 3.7 sequential game versions"],
+    "ps37-002": ["assets/figures/ps37-figures-10-v1-v2.png", "Problem 3.7 sequential game versions"],
+    "ps37-003": ["assets/figures/ps37-figures-10-v1-v2.png", "Problem 3.7 sequential game versions"],
+    "ps38-001": ["assets/figures/ps38-chip-game.png", "Problem 3.8 chip game tree"],
+    "ps38-002": ["assets/figures/ps38-chip-game.png", "Problem 3.8 chip game tree"],
+    "ps310-001": ["assets/figures/ps310-figure-11.png", "Problem 3.10 river game tree"],
+    "ps310-002": ["assets/figures/ps310-figure-11.png", "Problem 3.10 river game tree"],
+    "ps310-003": ["assets/figures/ps310-figure-11.png", "Problem 3.10 river game tree"],
+    "ps310-004": ["assets/figures/ps310-figure-11.png", "Problem 3.10 river game tree"],
+    "ps311-001": ["assets/figures/ps311-car-game.png", "Problem 3.11 car-buying tree"],
+    "ps311-002": ["assets/figures/ps311-car-game.png", "Problem 3.11 car-buying tree"],
+    "ps311-003": ["assets/figures/ps311-car-game.png", "Problem 3.11 car-buying tree"],
+    "ps312-001": ["assets/figures/ps312-apple-game.png", "Problem 3.12 apple-sharing tree"],
+    "ps312-002": ["assets/figures/ps312-apple-game.png", "Problem 3.12 apple-sharing tree"],
+    "ps312-003": ["assets/figures/ps312-apple-game.png", "Problem 3.12 apple-sharing tree"],
+    "ps312-004": ["assets/figures/ps312-apple-game.png", "Problem 3.12 apple-sharing tree"],
+    "ps312-005": ["assets/figures/ps312-apple-game.png", "Problem 3.12 apple-sharing tree"],
+    "ps313-001": ["assets/figures/ps313-figure-8.png", "Problem 3.13 Figure 8 game tree"],
+    "ps313-002": ["assets/figures/ps313-figure-9.png", "Problem 3.13 Figure 9 game tree"],
+    "ps313-003": ["assets/figures/ps313-figure-10.png", "Problem 3.13 Figure 10 game tree"]
+  };
 
   const state = {
     questions: [],
@@ -23,6 +70,7 @@
     questionCounter: document.querySelector("#question-counter"),
     questionSource: document.querySelector("#question-source"),
     questionText: document.querySelector("#question-text"),
+    questionFigure: document.querySelector("#question-figure"),
     answers: document.querySelector("#answers"),
     feedback: document.querySelector("#feedback"),
     reviewList: document.querySelector("#review-list")
@@ -69,6 +117,8 @@
     els.feedback.textContent = "";
     els.nextBtn.disabled = true;
     els.answers.innerHTML = "";
+    els.questionFigure.hidden = true;
+    els.questionFigure.innerHTML = "";
 
     if (state.questions.length === 0) {
       els.questionCounter.textContent = "Question 0 of 0";
@@ -82,6 +132,7 @@
     els.questionCounter.textContent = `Question ${state.current + 1} of ${state.questions.length}`;
     els.questionSource.textContent = `${question.topic} - ${question.source}`;
     els.questionText.textContent = question.question;
+    renderFigure(question);
 
     question.options.forEach((option, index) => {
       const button = document.createElement("button");
@@ -95,6 +146,25 @@
       button.addEventListener("click", () => chooseAnswer(index));
       els.answers.appendChild(button);
     });
+  }
+
+  function renderFigure(question) {
+    els.questionFigure.hidden = true;
+    els.questionFigure.innerHTML = "";
+    const figure = figures[question.id] || (question.image ? [question.image, question.imageAlt || "Question figure"] : null);
+    if (!figure) return;
+    const [src, alt] = figure;
+    const link = document.createElement("a");
+    link.href = src;
+    link.target = "_blank";
+    link.rel = "noopener";
+    const image = document.createElement("img");
+    image.src = src;
+    image.alt = alt;
+    image.loading = "lazy";
+    link.appendChild(image);
+    els.questionFigure.appendChild(link);
+    els.questionFigure.hidden = false;
   }
 
   function chooseAnswer(index) {

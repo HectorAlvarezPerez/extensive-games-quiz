@@ -228,6 +228,25 @@ label {
   gap: 0.6rem;
 }
 
+.question-figure {
+  margin: 0 0 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+}
+
+.question-figure a {
+  display: block;
+}
+
+.question-figure img {
+  display: block;
+  width: 100%;
+  max-height: min(28rem, 56vh);
+  object-fit: contain;
+}
+
 .answer-btn {
   display: grid;
   grid-template-columns: 2.2rem 1fr;
