@@ -68,9 +68,13 @@
     startBtn: document.querySelector("#start-btn"),
     nextBtn: document.querySelector("#next-btn"),
     restartBtn: document.querySelector("#restart-btn"),
+    modeButtons: document.querySelectorAll(".mode-btn"),
+    matchingCount: document.querySelector("#matching-count"),
     bankCount: document.querySelector("#bank-count"),
     score: document.querySelector("#score"),
     progress: document.querySelector("#progress"),
+    progressBar: document.querySelector("#progress-bar"),
+    accuracy: document.querySelector("#accuracy"),
     questionCounter: document.querySelector("#question-counter"),
     questionSource: document.querySelector("#question-source"),
     questionText: document.querySelector("#question-text"),
@@ -116,9 +120,41 @@
     });
   }
 
+  function selectedSessionSize(total) {
+    if (els.sessionSize.value === "all") return total;
+    return Math.min(Number(els.sessionSize.value), total);
+  }
+
+  function updateSetupSummary() {
+    const total = filteredQuestions().length;
+    const sessionSize = selectedSessionSize(total);
+    els.matchingCount.textContent = total === 0
+      ? "No matching questions"
+      : `${total} matching questions - ${sessionSize} in next session`;
+    els.startBtn.disabled = total === 0;
+    els.modeButtons.forEach((button) => {
+      const matchesTopic = button.dataset.topic === els.topicFilter.value;
+      const matchesDifficulty = button.dataset.difficulty === els.difficultyFilter.value;
+      const matchesSize = button.dataset.size === els.sessionSize.value;
+      button.classList.toggle("is-selected", matchesTopic && matchesDifficulty && matchesSize);
+    });
+  }
+
+  function applyStudyMode(button) {
+    const { topic, difficulty, size } = button.dataset;
+    if (topic && [...els.topicFilter.options].some((option) => option.value === topic)) {
+      els.topicFilter.value = topic;
+    }
+    if (difficulty) els.difficultyFilter.value = difficulty;
+    if (size) els.sessionSize.value = size;
+    updateSetupSummary();
+    startQuiz();
+    document.querySelector(".quiz-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function startQuiz() {
     const filtered = shuffle(filteredQuestions());
-    const size = els.sessionSize.value === "all" ? filtered.length : Number(els.sessionSize.value);
+    const size = selectedSessionSize(filtered.length);
     state.questions = filtered.slice(0, size).map(shuffleQuestionOptions);
     state.current = 0;
     state.answered = false;
@@ -132,6 +168,7 @@
     updateStats();
     els.feedback.hidden = true;
     els.feedback.textContent = "";
+    els.feedback.className = "feedback";
     els.nextBtn.disabled = true;
     els.answers.innerHTML = "";
     els.questionFigure.hidden = true;
@@ -198,6 +235,7 @@
     });
 
     els.feedback.hidden = false;
+    els.feedback.classList.add(isCorrect ? "is-correct" : "is-incorrect");
     els.feedback.textContent = `${isCorrect ? "Correct." : "Not quite."} ${question.explanation}`;
     els.nextBtn.disabled = false;
 
@@ -229,6 +267,9 @@
     const total = state.questions.length || 0;
     const pct = total === 0 ? 0 : Math.round((totalAnswered / total) * 100);
     els.progress.textContent = `${pct}%`;
+    els.progressBar.style.width = `${pct}%`;
+    els.accuracy.textContent = totalAnswered === 0 ? "0%" : `${Math.round((state.correct / totalAnswered) * 100)}%`;
+    updateSetupSummary();
   }
 
   function renderReview() {
@@ -240,6 +281,7 @@
     state.review.forEach((item) => {
       const article = document.createElement("article");
       article.className = "review-item";
+      article.classList.add(item.result === "Correct" ? "is-correct" : "is-incorrect");
       const summary = document.createElement("p");
       const result = document.createElement("strong");
       result.textContent = `${item.result}:`;
@@ -259,6 +301,13 @@
       option.value = topic;
       option.textContent = topic;
       els.topicFilter.appendChild(option);
+    });
+    updateSetupSummary();
+    [els.topicFilter, els.difficultyFilter, els.sessionSize].forEach((select) => {
+      select.addEventListener("change", updateSetupSummary);
+    });
+    els.modeButtons.forEach((button) => {
+      button.addEventListener("click", () => applyStudyMode(button));
     });
     els.startBtn.addEventListener("click", startQuiz);
     els.nextBtn.addEventListener("click", nextQuestion);

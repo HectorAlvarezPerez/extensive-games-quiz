@@ -19,6 +19,7 @@
         <div>
           <p class="eyebrow">Game Theory 102477</p>
           <h1>Extensive Games Quiz</h1>
+          <p class="subtitle">Fast multiple-choice practice for extensive games, built for phone study sessions.</p>
         </div>
         <div class="tree-mark" aria-hidden="true">
           <span></span><span></span><span></span><span></span><span></span>
@@ -30,6 +31,11 @@
           <div class="setup-copy">
             <h2 id="setup-title">Practice setup</h2>
             <p>Questions follow slides 1-51, Problem Set 3 except Problem 14, and the teacher practice PDF. Mixed extensions and dominated-strategy elimination are excluded.</p>
+            <div class="study-modes" aria-label="Quick study modes">
+              <button class="mode-btn" type="button" data-topic="all" data-difficulty="exam" data-size="30">Exam mix</button>
+              <button class="mode-btn" type="button" data-topic="Practice PDF" data-difficulty="all" data-size="all">Teacher PDF</button>
+              <button class="mode-btn" type="button" data-topic="Practice-style variants" data-difficulty="all" data-size="30">Similar drills</button>
+            </div>
           </div>
 
           <div class="controls">
@@ -57,7 +63,10 @@
                 <option value="all">All filtered questions</option>
               </select>
             </label>
-            <button id="start-btn" type="button">Start quiz</button>
+            <div class="start-cell">
+              <p id="matching-count" class="matching-count">0 matching questions</p>
+              <button id="start-btn" type="button">Start quiz</button>
+            </div>
           </div>
         </section>
 
@@ -74,9 +83,16 @@
             <span id="progress">0%</span>
             <p>completed</p>
           </div>
+          <div>
+            <span id="accuracy">0%</span>
+            <p>accuracy</p>
+          </div>
         </section>
 
         <section class="quiz-panel" aria-live="polite">
+          <div class="progress-track" aria-hidden="true">
+            <span id="progress-bar"></span>
+          </div>
           <div class="question-meta">
             <span id="question-counter">Question 0 of 0</span>
             <span id="question-source">Ready</span>

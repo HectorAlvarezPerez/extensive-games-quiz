@@ -3,6 +3,7 @@
   --bg: #f6f5f1;
   --surface: #ffffff;
   --surface-strong: #ece8df;
+  --surface-soft: #faf9f6;
   --text: #191d22;
   --muted: #5e6670;
   --border: #d8d2c4;
@@ -11,6 +12,7 @@
   --wrong: #a13f35;
   --right: #1e6f45;
   --focus: #1f77b4;
+  --shadow: 0 0.65rem 1.8rem rgb(25 29 34 / 0.08);
 }
 
 * {
@@ -67,7 +69,7 @@ select:focus-visible {
 .app-shell {
   width: min(1120px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 1.25rem 0 2rem;
+  padding: 1.1rem 0 2rem;
 }
 
 .topbar {
@@ -96,6 +98,12 @@ h1 {
   margin-bottom: 0;
   font-size: clamp(1.8rem, 4vw, 3.15rem);
   letter-spacing: 0;
+}
+
+.subtitle {
+  max-width: 36rem;
+  margin: 0.35rem 0 0;
+  color: var(--muted);
 }
 
 h2 {
@@ -159,12 +167,39 @@ main {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 1.4fr);
   gap: 1rem;
-  align-items: end;
+  align-items: stretch;
+  box-shadow: var(--shadow);
 }
 
 .setup-copy p {
-  margin-bottom: 0;
+  margin-bottom: 0.9rem;
   color: var(--muted);
+}
+
+.study-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mode-btn {
+  min-height: 2.25rem;
+  border-color: var(--border);
+  background: var(--surface-soft);
+  color: var(--accent-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.mode-btn:hover {
+  border-color: var(--accent);
+  background: #edf7f5;
+}
+
+.mode-btn.is-selected {
+  border-color: var(--accent-dark);
+  background: var(--accent);
+  color: white;
 }
 
 .controls {
@@ -182,14 +217,28 @@ label {
   font-weight: 700;
 }
 
+.start-cell {
+  display: grid;
+  gap: 0.35rem;
+  align-self: end;
+}
+
+.matching-count {
+  min-height: 1.3rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
 }
 
 .stats-grid div {
-  min-height: 5rem;
+  min-height: 4.5rem;
   background: var(--surface-strong);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -211,10 +260,26 @@ label {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin: 0.9rem 0 0.75rem;
   color: var(--muted);
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.progress-track {
+  height: 0.55rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-strong);
+}
+
+.progress-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 180ms ease;
 }
 
 #question-text {
@@ -260,8 +325,18 @@ label {
   text-align: left;
 }
 
+.answer-btn:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.answer-btn:disabled:not(.correct):not(.incorrect) {
+  color: var(--muted);
+}
+
 .answer-btn:hover {
   background: #f7fbfa;
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
 }
 
 .answer-btn strong {
@@ -278,9 +353,19 @@ label {
   background: #edf8f1;
 }
 
+.answer-btn.correct strong {
+  background: var(--right);
+  color: white;
+}
+
 .answer-btn.incorrect {
   border-color: var(--wrong);
   background: #fff0ee;
+}
+
+.answer-btn.incorrect strong {
+  background: var(--wrong);
+  color: white;
 }
 
 .feedback {
@@ -288,6 +373,19 @@ label {
   border-left: 4px solid var(--accent);
   background: #f7fbfa;
   padding: 0.8rem;
+  border-radius: 0 6px 6px 0;
+  color: var(--text);
+  font-weight: 650;
+}
+
+.feedback.is-correct {
+  border-left-color: var(--right);
+  background: #edf8f1;
+}
+
+.feedback.is-incorrect {
+  border-left-color: var(--wrong);
+  background: #fff0ee;
 }
 
 .quiz-actions {
@@ -311,6 +409,15 @@ label {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.75rem;
+  background: var(--surface-soft);
+}
+
+.review-item.is-correct {
+  border-left: 4px solid var(--right);
+}
+
+.review-item.is-incorrect {
+  border-left: 4px solid var(--wrong);
 }
 
 .review-item p {
@@ -344,13 +451,14 @@ label {
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 520px) {
   .app-shell {
     width: min(100% - 1rem, 1120px);
+    padding-top: 0.75rem;
   }
 
   .topbar {
@@ -363,9 +471,29 @@ label {
 
   #question-text {
     font-size: 1.1rem;
+    min-height: 0;
   }
 
   .question-meta {
     display: grid;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .stats-grid div {
+    min-height: 4.1rem;
+    padding: 0.65rem;
+  }
+
+  .stats-grid span {
+    font-size: 1.35rem;
+  }
+
+  .quiz-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
