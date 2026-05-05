@@ -19,6 +19,10 @@
     "ps32-003": ["assets/figures/ps32-game-2.png", "Problem 3.2 Game 2 tree"],
     "ps32-004": ["assets/figures/ps32-game-3.png", "Problem 3.2 Game 3 tree"],
     "ps32-005": ["assets/figures/ps32-game-4b.png", "Problem 3.2 Game 4 equivalent tree"],
+    "ps33-001": ["assets/figures/ps33-veto-tree.png", "Problem 3.3 committee veto game tree"],
+    "ps33-002": ["assets/figures/ps33-veto-tree.png", "Problem 3.3 committee veto game tree"],
+    "ps33-003": ["assets/figures/ps33-veto-tree.png", "Problem 3.3 committee veto game tree"],
+    "ps33-004": ["assets/figures/ps33-veto-tree.png", "Problem 3.3 committee veto game tree"],
     "ps34-001": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
     "ps34-002": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
     "ps34-003": ["assets/figures/ps34-figure-5.png", "Problem 3.4 Figure 5 game tree"],
@@ -85,6 +89,19 @@
     return copy;
   }
 
+  function shuffleQuestionOptions(question) {
+    const options = question.options.map((text, index) => ({
+      text,
+      isCorrect: index === question.answer
+    }));
+    const shuffled = shuffle(options);
+    return {
+      ...question,
+      options: shuffled.map((option) => option.text),
+      answer: shuffled.findIndex((option) => option.isCorrect)
+    };
+  }
+
   function topics() {
     return [...new Set(bank.map((question) => question.topic))].sort();
   }
@@ -102,7 +119,7 @@
   function startQuiz() {
     const filtered = shuffle(filteredQuestions());
     const size = els.sessionSize.value === "all" ? filtered.length : Number(els.sessionSize.value);
-    state.questions = filtered.slice(0, size);
+    state.questions = filtered.slice(0, size).map(shuffleQuestionOptions);
     state.current = 0;
     state.answered = false;
     state.correct = 0;

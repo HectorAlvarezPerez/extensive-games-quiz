@@ -1,4 +1,4 @@
-const CACHE_NAME = "extensive-games-quiz-v2";
+const CACHE_NAME = "extensive-games-quiz-v3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const ASSETS = [
   "./assets/figures/ps32-game-2.png",
   "./assets/figures/ps32-game-3.png",
   "./assets/figures/ps32-game-4b.png",
+  "./assets/figures/ps33-veto-tree.png",
   "./assets/figures/ps34-figure-5.png",
   "./assets/figures/ps35-figure-6.png",
   "./assets/figures/ps35-figure-6-2.png",
